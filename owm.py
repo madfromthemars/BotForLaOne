@@ -2,7 +2,7 @@
 import requests
 from requests import exceptions
 
-API_URL = "82fcadd87b36b795c2802b02c760c443"
+API_URL = ""
 
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
 
