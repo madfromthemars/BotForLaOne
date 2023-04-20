@@ -17,7 +17,7 @@ async def main():
     # Log
     log("|| Bot started ||")
 
-    voBot = Bot(token="5427988173:AAENE4a2J5HsWnrOeifSoNNOL5j-ua3mlLM")
+    voBot = Bot(token="")
     voDB = MongoStorage(host='localhost', port='27017', db_name='LaOne')
     voDp = Dispatcher(voBot, storage=voDB)
 
