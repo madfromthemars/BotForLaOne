@@ -1,16 +1,36 @@
-# This is a sample Python script.
+# Standard libraries
+import asyncio
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Aiogram stuff
+from aiogram import Bot, Dispatcher
+from aiogram.contrib.fsm_storage.mongo import MongoStorage
+from aiogram.types import BotCommand
+
+# Handlers
+import handlers
+
+# Local
+from basic import log
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+async def main():
+    # Log
+    log("|| Bot started ||")
+
+    voBot = Bot(token="5427988173:AAENE4a2J5HsWnrOeifSoNNOL5j-ua3mlLM")
+    voDB = MongoStorage(host='localhost', port='27017', db_name='LaOne')
+    voDp = Dispatcher(voBot, storage=voDB)
+
+    # Registering Handler
+    handlers.regCommands(voDp)
+    handlers.regMenu(voDp)
+
+    # Listing commands to bot command menu
+    await voBot.set_my_commands([
+        BotCommand(command='/start', description='Restart Bot'),
+    ])
+    await voDp.start_polling()
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    asyncio.run(main())
