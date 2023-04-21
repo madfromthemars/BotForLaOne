@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from keyboards.general import WeatherMenu_Keyboard, Menu_Keyboard, Back_Keyboard
 
 # Local
-from basic import log, weather_icon
+from basic import log, weather_icon, get_RandomImage
 from owm import owmByLocation, owmByCity
 from cf import get_currency
 
@@ -49,7 +49,7 @@ async def get_menu(message: types.Message, state: FSMContext):
     elif message.text == 'Create a Poll':
         await message.answer(message.text)
     elif message.text == 'Cheer Me UP':
-        await message.answer(message.text)
+        await message.answer_photo(get_RandomImage())
     else:
         data = await state.get_data()
         menu_attempt = data.get('menu_attempt') or 0
@@ -114,6 +114,7 @@ async def get_WeatherCity(message: types.Message, state: FSMContext):
         # Instead, using try except, I used to use dict.get('smt') which will return None for not consisting Key
 
 
+# Responses In -> Currency State
 async def get_Currency(message: types.Message, state: FSMContext):
     log(message.from_id, '__Currency__', message.text)
     # getting entities

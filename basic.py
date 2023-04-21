@@ -1,11 +1,11 @@
 # Built In
 import os
-
-# MongoDB
-from pymongo import MongoClient
+import random
 
 # .env
 from dotenv import load_dotenv
+
+IMAGE_DIR = 'images/'
 
 # region --Get Weather Icon
 def weather_icon(icon):
@@ -34,6 +34,7 @@ DB_NAME: str = os.getenv('DB_NAME')
 OWM_TOKEN: str = os.getenv('OWM_TOKEN')
 CF_TOKEN: str = os.getenv('CF_TOKEN')
 
+
 # endregion
 
 # region --Loging--
@@ -46,14 +47,11 @@ def log(*args):
 
 # endregion
 
-# region  --DB--
-def get_database():
-    Connection_String = "mongodb://localhost:27017/MrCoach"
-    Client = MongoClient(Connection_String)
-    return Client.get_database()
+# region --Random Image--
+def get_RandomImage():
+    images = os.listdir(IMAGE_DIR)
+    imageName = random.choice(images)
+    Image = open(IMAGE_DIR + imageName, 'rb')
+    return Image
 
-
-def get_collection(name: str):
-    db = get_database()
-    return db.get_collection(name)
 # endregion
