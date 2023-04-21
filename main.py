@@ -10,15 +10,15 @@ from aiogram.types import BotCommand
 import handlers
 
 # Local
-from basic import log
+from basic import log, TOKEN, DB_HOST, DB_PORT, DB_NAME
 
 
 async def main():
     # Log
     log("|| Bot started ||")
 
-    voBot = Bot(token="5427988173:AAENE4a2J5HsWnrOeifSoNNOL5j-ua3mlLM")
-    voDB = MongoStorage(host='localhost', port='27017', db_name='LaOne')
+    voBot = Bot(token=TOKEN)
+    voDB = MongoStorage(host=DB_HOST, port=DB_PORT, db_name=DB_NAME)
     voDp = Dispatcher(voBot, storage=voDB)
 
     # Registering Handler

@@ -2,7 +2,9 @@
 import requests
 from requests import exceptions
 
-API_URL = "82fcadd87b36b795c2802b02c760c443"
+# Local
+from basic import OWM_TOKEN
+
 
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
 
@@ -11,7 +13,7 @@ BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
 def owmByCity(city, lang='en'):
     res = None
     try:
-        res = requests.get(BASE_URL + f'q={city}&appid={API_URL}&lang={lang}', ).json()
+        res = requests.get(BASE_URL + f'q={city}&appid={OWM_TOKEN}&lang={lang}', ).json()
         return res
     except exceptions.ConnectionError:
         print("Problem with Connection OWM-Location")
@@ -27,7 +29,7 @@ def owmByCity(city, lang='en'):
 def owmByLocation(lat, lon, lang='en'):
     res = None
     try:
-        res = requests.get(BASE_URL + f'lat={lat}&lon={lon}&appid={API_URL}&lang={lang}').json()
+        res = requests.get(BASE_URL + f'lat={lat}&lon={lon}&appid={OWM_TOKEN}&lang={lang}').json()
         return res
     except exceptions.ConnectionError:
         print("Problem with Connection OWM-Location")

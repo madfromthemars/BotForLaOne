@@ -1,3 +1,6 @@
+# Built In
+import os
+
 # MongoDB
 from pymongo import MongoClient
 
@@ -5,20 +8,29 @@ from pymongo import MongoClient
 # region --Get Weather Icon
 def weather_icon(icon):
     icons = {
-        '01d': '☀️',      '01n': '🌙',
-        '02d': '🌤',         '02n': '☁️',
-        '03d': '☁️',      '03n': '☁️',
-        '04d': '☁️',      '04n': '☁️',
-        '09d': ' 🌦',        '09n': '🌧',
-        '10d': '🌧',         '10n': '🌧',
-        '11d': '🌩',         '11n': '🌩',
-        '13d': '❄️',      '13n': '❄️',
-        '50d': '🌫',         '50n': '🌫',
+        '01d': '☀️', '01n': '🌙',
+        '02d': '🌤', '02n': '☁️',
+        '03d': '☁️', '03n': '☁️',
+        '04d': '☁️', '04n': '☁️',
+        '09d': ' 🌦', '09n': '🌧',
+        '10d': '🌧', '10n': '🌧',
+        '11d': '🌩', '11n': '🌩',
+        '13d': '❄️', '13n': '❄️',
+        '50d': '🌫', '50n': '🌫',
     }
     return icons.get(icon)
 
+
 # endregion
 
+# region --Config from ENV--
+TOKEN: str = os.getenv('TOKEN')
+DB_HOST: str = os.getenv('DB_HOST')
+DB_PORT: str = os.getenv('DB_PORT')
+DB_NAME: str = os.getenv('DB_NAME')
+OWM_TOKEN: str = os.getenv('OWM_TOKEN')
+
+# endregion
 
 # region --Loging--
 def log(*args):
