@@ -1,10 +1,13 @@
-# Request lib
+# || Using: Open Weather Map ||
+# || Link to website: https://openweathermap.org/api ||
+# || Used to -- Get weather condition ||
+
+# Requests
 import requests
 from requests import exceptions
 
 # Local
 from basic import OWM_TOKEN
-
 
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
 

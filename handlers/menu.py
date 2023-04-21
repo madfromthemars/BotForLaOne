@@ -3,11 +3,12 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 # Keyboard
-from keyboards.general import WeatherMenu_Keyboard, back_to, Menu_Keyboard, Back_Keyboard
+from keyboards.general import WeatherMenu_Keyboard, Menu_Keyboard, Back_Keyboard
 
 # Local
 from basic import log, weather_icon
 from owm import owmByLocation, owmByCity
+from cf import get_currency
 
 menu_option_text = [
     'Please choose from options below😀', 'Pleas choose from options below☺️',
@@ -20,7 +21,7 @@ menu_option_text = [
 
 async def Back_To(message: types.Message, state: FSMContext):
     Current_State = await state.get_state()
-    if Current_State in 'weather-menu':
+    if Current_State in ('weather-menu', 'currency'):
         await message.answer(message.text, reply_markup=Menu_Keyboard)
         await state.set_state('menu')
     elif Current_State in 'weather-city':
@@ -37,8 +38,15 @@ async def get_menu(message: types.Message, state: FSMContext):
         await message.answer(message.text, reply_markup=WeatherMenu_Keyboard)
         await state.set_state('weather-menu')
     elif message.text == 'Convert currency':
-        await message.answer(message.text)
-    elif message.text == 'Convert currency':
+        await message.answer(
+            "Send in this format:\nAmount - from Current - to Currency"
+            "\n\nExample: 100-eur-rub"
+            "\n\n<i>Please note that use Abbreviations for currency</i>",
+            reply_markup=Back_Keyboard,
+            parse_mode="HTML"
+        )
+        await state.set_state('currency')
+    elif message.text == 'Create a Poll':
         await message.answer(message.text)
     elif message.text == 'Cheer Me UP':
         await message.answer(message.text)
@@ -56,6 +64,7 @@ async def get_menu(message: types.Message, state: FSMContext):
         await state.update_data(menu_attempt=menu_attempt)
 
 
+# Responses In -> Weather-Menu State
 async def get_WeatherMenu(message: types.Message, state: FSMContext):
     log(message.from_id, '__Weather-Menu__', message.text or message.location)
 
@@ -78,6 +87,7 @@ async def get_WeatherMenu(message: types.Message, state: FSMContext):
         return
 
 
+# Responses In -> Weather-Menu -> Weather-City State
 async def get_WeatherCity(message: types.Message, state: FSMContext):
     log(message.from_id, '__Weather-Menu__', message.text or message.location)
     if '&' in message.text or '=' in message.text or ',' in message.text:
@@ -102,3 +112,34 @@ async def get_WeatherCity(message: types.Message, state: FSMContext):
         except TypeError:
             await message.answer("Something went wrong, could you try again later")
         # Instead, using try except, I used to use dict.get('smt') which will return None for not consisting Key
+
+
+async def get_Currency(message: types.Message, state: FSMContext):
+    log(message.from_id, '__Currency__', message.text)
+    # getting entities
+    entities = message.text.split('-')
+    # filtering entities
+    for e in entities:
+        ind = entities.index(e)
+        entities.remove(e)
+        e = e.rstrip()
+        e = e.lstrip()
+        e = e.upper()
+        entities.insert(ind, e)
+    try:
+        res = get_currency(entities[1], entities[2])  # Requesting
+        # Cause of CF free only restricts to use direct currency exchange we use base currency
+        # to get rates from (It is dollar)
+        cur_in_base = int(entities[0]) / float(
+            '%.2f' % float(res.get('rates').get(entities[1].upper())))  # Amount in USD
+        cur_in_need = cur_in_base * float(
+            '%.2f' % float(res.get('rates').get(entities[2].upper())))  # Amount in Needed Currency
+        await message.answer(
+            f"Current rate: {entities[0]} {entities[1]} ~ %0.2f {entities[2]}" % cur_in_need
+        )
+    except IndexError:
+        await message.answer("Something went wrong, could you try again later")
+    except KeyError:
+        await message.answer("Something went wrong, could you try again later")
+    except TypeError:
+        await message.answer("Something went wrong, could you try again later")

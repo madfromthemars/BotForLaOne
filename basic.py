@@ -4,6 +4,8 @@ import os
 # MongoDB
 from pymongo import MongoClient
 
+# .env
+from dotenv import load_dotenv
 
 # region --Get Weather Icon
 def weather_icon(icon):
@@ -24,11 +26,13 @@ def weather_icon(icon):
 # endregion
 
 # region --Config from ENV--
+load_dotenv()
 TOKEN: str = os.getenv('TOKEN')
 DB_HOST: str = os.getenv('DB_HOST')
 DB_PORT: str = os.getenv('DB_PORT')
 DB_NAME: str = os.getenv('DB_NAME')
 OWM_TOKEN: str = os.getenv('OWM_TOKEN')
+CF_TOKEN: str = os.getenv('CF_TOKEN')
 
 # endregion
 
@@ -41,7 +45,6 @@ def log(*args):
 
 
 # endregion
-
 
 # region  --DB--
 def get_database():
