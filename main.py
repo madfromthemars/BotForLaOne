@@ -24,6 +24,7 @@ async def main():
     # Registering Handler
     handlers.regCommands(voDp)
     handlers.regMenu(voDp)
+    handlers.regPoll(voDp)
 
     # Listing commands to bot command menu
     await voBot.set_my_commands([

@@ -3,7 +3,8 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 # Keyboard
-from keyboards.general import WeatherMenu_Keyboard, Menu_Keyboard, Back_Keyboard
+from keyboards.general import (WeatherMenu_Keyboard, Menu_Keyboard, Back_Keyboard,
+                               YesNo_Keyboard)
 
 # Local
 from basic import log, weather_icon, get_RandomImage
@@ -21,7 +22,7 @@ menu_option_text = [
 
 async def Back_To(message: types.Message, state: FSMContext):
     Current_State = await state.get_state()
-    if Current_State in ('weather-menu', 'currency'):
+    if Current_State in ('weather-menu', 'currency', 'poll-title'):
         await message.answer(message.text, reply_markup=Menu_Keyboard)
         await state.set_state('menu')
     elif Current_State in 'weather-city':
@@ -47,9 +48,11 @@ async def get_menu(message: types.Message, state: FSMContext):
         )
         await state.set_state('currency')
     elif message.text == 'Create a Poll':
-        await message.answer(message.text)
+        await message.answer("Please Send Title for the poll", reply_markup=Back_Keyboard)
+        await state.set_state('poll-title')
     elif message.text == 'Cheer Me UP':
         await message.answer_photo(get_RandomImage())
+        return
     else:
         data = await state.get_data()
         menu_attempt = data.get('menu_attempt') or 0
@@ -144,3 +147,4 @@ async def get_Currency(message: types.Message, state: FSMContext):
         await message.answer("Something went wrong, could you try again later")
     except TypeError:
         await message.answer("Something went wrong, could you try again later")
+
